@@ -1,7 +1,7 @@
 import time
-from sokoban import *
+from src.sokoban import *
 
-game = Sokoban("Boards/board.txt")
+game = Sokoban("../Boards/board.txt")
 
 game_stack = [game]  # Va a actuar como un stack. Si pongo al final y saco del final => es lo mismo que un stack
 seen_states = set()
