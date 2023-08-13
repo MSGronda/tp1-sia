@@ -20,7 +20,9 @@ while not game.victory():
 
         _hash = hash(alt_game)
 
-        # Evitamos expandir estados que ya vimos
+        # Evitamos expandir estados que ya vimos. Estamos asegurados de no eliminar un buen camino
+        # posible dado que usamos BFS (que siempre expande los nodos con menor altura)
+
         if _hash not in seen_states:
             seen_states.add(_hash)
             game_queue.append(alt_game)  # enqueue
