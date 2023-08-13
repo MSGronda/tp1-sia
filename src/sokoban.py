@@ -264,10 +264,10 @@ class Sokoban:
                 distance = abs(box_position[0] - goal_location[0]) + abs(box_position[1] - goal_location[1])
                 if minimum_distance is None or distance < minimum_distance:
                     minimum_distance = distance
-            try:
-                sum_distance += minimum_distance
-            except TypeError:
-                pass
+
+            sum_distance += minimum_distance
+
+
 
         return sum_distance
 
