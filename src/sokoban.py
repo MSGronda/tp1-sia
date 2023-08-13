@@ -238,33 +238,36 @@ class Sokoban:
     def __lt__(self, other):
         return self.points < other.points
 
-    def find_board_component(self, component: BoardItems):
-        boxes = []
+    def find_board_component(self, components: [BoardItems]):
+        coordinates = []
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
-                if self.board[i][j] == component:
-                    boxes.append((i, j))
-        return boxes
+                if self.board[i][j] in components:
+                    coordinates.append((i, j))
+        return coordinates
+
+
 
     def calculate_manhattan_distance(self):
-        #devuelve array de tuplas representando posicion cajas [(1,2), (3,4), ...]
-        boxes = self.find_board_component(BoardItems.BOX)
-        #idem pero para posiciones goal
-        goal_locations = self.find_board_component(BoardItems.GOAL)
+        # devuelve array de tuplas representando posicion cajas [(1,2), (3,4), ...]
+        boxes = self.find_board_component([BoardItems.BOX])
+        # idem pero para posiciones goal
+        goal_locations = self.find_board_component([BoardItems.GOAL,BoardItems.GOAL_WITH_PLAYER])
 
-
-        #calcula la distancia de las sumas minimas de las cajas a su goal position.
+        # calcula la distancia de las sumas minimas de las cajas a su goal position.
         sum_distance = 0
         minimum_distance = None
 
-
         for box_position in boxes:
             for goal_location in goal_locations:
-                #calculo distancia entre cajas
+                # calculo distancia entre cajas
                 distance = abs(box_position[0] - goal_location[0]) + abs(box_position[1] - goal_location[1])
                 if minimum_distance is None or distance < minimum_distance:
                     minimum_distance = distance
-            sum_distance += minimum_distance
+            try:
+                sum_distance += minimum_distance
+            except TypeError:
+                pass
 
         return sum_distance
 

@@ -1,7 +1,7 @@
 import time
 from src.sokoban import *
 
-game = Sokoban("../Boards/board2.txt")
+game = Sokoban("../Boards/board4.txt")
 
 game_queue = [game]     # Va a acutar como una cola. Meto al final pero saco del principio
 seen_states = set()

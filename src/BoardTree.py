@@ -8,12 +8,10 @@ class BoardTreeNode:
         self.board = board
         self.children: list[tuple[int, BoardTreeNode, Moves]] = []
 
-    def expand(self) -> bool:
+    def expand(self) -> Sokoban:
         # creo un nodo hijo por cada movimiento
         if self.board.victory():
-            print("Solution found")
-            print(self.board.moves)
-            return True
+            return self.board
 
         BoardTreeNode.visitedStates.add(hash(self.board))
 
@@ -29,7 +27,8 @@ class BoardTreeNode:
         self.children.sort(key=lambda item: item[0])
 
         for _, childNode, _ in self.children:
-            if childNode.expand():
-                return True
+            result = childNode.expand()
+            if result:
+                return result
 
-        return False
+        #return None implicito
