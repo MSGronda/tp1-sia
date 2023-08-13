@@ -1,12 +1,15 @@
 import time
 from src.sokoban import *
 
-game = Sokoban("../Boards/board.txt")
+game = Sokoban("../Boards/board2.txt")
 
 game_queue = [game]     # Va a acutar como una cola. Meto al final pero saco del principio
 seen_states = set()
 
 start_time = time.time()
+
+
+nodesExpanded = 0
 
 while not game.victory():
 
@@ -17,6 +20,7 @@ while not game.victory():
     for elem in valid_moves:
         alt_game = copy.deepcopy(game)
         alt_game.move(elem)
+        nodesExpanded += 1
 
         _hash = hash(alt_game)
 
@@ -32,5 +36,7 @@ end_time = time.time()
 
 print(f"\n{end_time - start_time}s taken")
 print(f"{len(game.moves)} moves done in best solution")
+print(f"Expanded {nodesExpanded} nodes")
+print(f"{len(game_queue)} nodes left on the frontier")
 print(game.moves)
 
