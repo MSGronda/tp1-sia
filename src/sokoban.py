@@ -23,6 +23,9 @@ class Moves(Enum):
 MOVE_X = 1
 MOVE_Y = 0
 
+COORD_X = 0
+COORD_Y = 1
+
 ITEM_MAP = {
     ' ': BoardItems.EMPTY_SPACE,
     '#': BoardItems.WALL,
@@ -64,9 +67,14 @@ class Sokoban:
         self.board = None
         self.width = None
         self.height = None
-        self.player_y = None
-        self.player_x = None
+
         self.moves = []
+
+        self.player = None
+        self.boxes = []
+        self.goals = []
+
+        self.points = 0
 
         if path is not None:
             # Matriz de n x m
@@ -81,40 +89,33 @@ class Sokoban:
 
         self.height, self.width = np.shape(self.board)
 
-        self.count_goals()
-        # Nos guardamos la pos del jugador para no tener que ir buscandolo
-
-        y, x = self.find_player()
-
-        if x == -1 or y == -1:
-            quit("no player found")
-
-        self.player_x = x
-        self.player_y = y
+        self.locate_items()
 
     # METODOS "PRIVADOS"
 
-    def find_player(self):
-        condition = np.logical_or(self.board == BoardItems.PLAYER, self.board == BoardItems.GOAL_WITH_PLAYER)
+    def locate_items(self):
 
-        row_indexes, col_indexes = np.where(condition)
+        # Consigo la posicion de todos los elementos relevantes
+        # para no tener que iterar constantemente
 
-        if len(row_indexes) == 0 or len(col_indexes) == 0:
-            return -1, -1
+        for y, row in enumerate(self.board):
+            for x, item in enumerate(row):
 
-        return row_indexes[0], col_indexes[0]
-
-    def count_goals(self):
-        self.goals = 0
-        self.points = 0
-
-        for row in self.board:
-            for item in row:
-                if item == BoardItems.GOAL or item == BoardItems.GOAL_WITH_PLAYER:
-                    self.goals += 1
+                if item == BoardItems.PLAYER:
+                    self.player = [x, y]
+                elif item == BoardItems.GOAL_WITH_PLAYER:
+                    self.player = [x, y]
+                    self.goals.append([x, y])
+                elif item == BoardItems.BOX:
+                    self.boxes.append([x, y])
+                elif item == BoardItems.GOAL:
+                    self.goals.append([x, y])
                 elif item == BoardItems.GOAL_WITH_BOX:
-                    self.goals += 1
+                    self.boxes.append([x, y])
+                    self.goals.append([x, y])
+
                     self.points += 1
+
 
     # METODOS "PUBLICOS"
 
@@ -127,10 +128,9 @@ class Sokoban:
 
     def can_move(self, move):
         # Esta dentro de la matriz
-        if 0 <= self.player_x + move.value[MOVE_X] < self.width and 0 <= self.player_y + move.value[
-            MOVE_Y] < self.height:
+        if 0 <= self.player[COORD_X] + move.value[MOVE_X] < self.width and 0 <= self.player[COORD_Y] + move.value[MOVE_Y] < self.height:
 
-            block = self.board[self.player_y + move.value[MOVE_Y], self.player_x + move.value[MOVE_X]]
+            block = self.board[self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]]
 
             # Caso: me muevo a un espacio vacio
             if block == BoardItems.EMPTY_SPACE or block == BoardItems.GOAL:
@@ -140,11 +140,10 @@ class Sokoban:
             elif block == BoardItems.BOX or block == BoardItems.GOAL_WITH_BOX:
 
                 # Me fijo que adonde quiero empujar la caja, es dentro de la matriz
-                if 0 <= self.player_x + move.value[MOVE_X] * 2 < self.width and 0 <= self.player_y + move.value[
-                    MOVE_Y] * 2 < self.height:
+                if 0 <= self.player[COORD_X] + move.value[MOVE_X] * 2 < self.width and 0 <= self.player[COORD_Y] + move.value[MOVE_Y] * 2 < self.height:
 
                     move_to_block = self.board[
-                        self.player_y + move.value[MOVE_Y] * 2, self.player_x + move.value[MOVE_X] * 2]
+                        self.player[COORD_Y] + move.value[MOVE_Y] * 2, self.player[COORD_X] + move.value[MOVE_X] * 2]
 
                     # Es valido adonde quiero mover la caja
                     if move_to_block == BoardItems.EMPTY_SPACE or move_to_block == BoardItems.GOAL:
@@ -162,44 +161,52 @@ class Sokoban:
         self.moves.append(move)
 
         # Cambio la posicion anterior del jugador
-        old_pos_block = self.board[self.player_y, self.player_x]
+        old_pos_block = self.board[self.player[COORD_Y], self.player[COORD_X]]
 
         if old_pos_block == BoardItems.PLAYER:
-            self.board[self.player_y, self.player_x] = BoardItems.EMPTY_SPACE
+            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.EMPTY_SPACE
         elif old_pos_block == BoardItems.GOAL_WITH_PLAYER:
-            self.board[self.player_y, self.player_x] = BoardItems.GOAL
+            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.GOAL
 
         # Cambio la nueva posicion del jugador
-        self.player_x += move.value[MOVE_X]
-        self.player_y += move.value[MOVE_Y]
+        self.player[COORD_X] += move.value[MOVE_X]
+        self.player[COORD_Y] += move.value[MOVE_Y]
 
-        new_pos_block = self.board[self.player_y, self.player_x]
+        new_pos_block = self.board[self.player[COORD_Y], self.player[COORD_X]]
 
         if new_pos_block == BoardItems.EMPTY_SPACE:
-            self.board[self.player_y, self.player_x] = BoardItems.PLAYER
+            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.PLAYER
         elif new_pos_block == BoardItems.GOAL:
-            self.board[self.player_y, self.player_x] = BoardItems.GOAL_WITH_PLAYER
+            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.GOAL_WITH_PLAYER
         # Caso: quiero mover un caja
         elif new_pos_block == BoardItems.BOX or new_pos_block == BoardItems.GOAL_WITH_BOX:
 
             # Ahora el jugador esta donde estaba la caja
             if new_pos_block == BoardItems.BOX:
-                self.board[self.player_y, self.player_x] = BoardItems.PLAYER
+                self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.PLAYER
             else:
                 # Desplace la caja de un goal
-                self.board[self.player_y, self.player_x] = BoardItems.GOAL_WITH_PLAYER
+                self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.GOAL_WITH_PLAYER
 
                 # La caja deja de estar encima de un goal => pierdo un punto
                 self.points -= 1
 
-            # Muevo la caja a la nueva posicion
-            new_pos_box_block = self.board[self.player_y + move.value[MOVE_Y], self.player_x + move.value[MOVE_X]]
+            # = Muevo la caja a la nueva posicion =
+
+            # Primero updateo la posicion que tenemos guardada aparte
+
+            box_pos_idx = self.boxes.index([self.player[COORD_X], self.player[COORD_Y]]) # Adonde esta el jugador es donde solia estar la caja
+            self.boxes[box_pos_idx] = [self.player[COORD_X] + move.value[MOVE_X], self.player[COORD_Y] + move.value[MOVE_Y]] # Updateo la posicion
+
+            # Luego updateo la posicion en el board
+
+            new_pos_box_block = self.board[self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]]
 
             if new_pos_box_block == BoardItems.EMPTY_SPACE:
-                self.board[self.player_y + move.value[MOVE_Y], self.player_x + move.value[MOVE_X]] = BoardItems.BOX
+                self.board[self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]] = BoardItems.BOX
             elif new_pos_box_block == BoardItems.GOAL:
                 self.board[
-                    self.player_y + move.value[MOVE_Y], self.player_x + move.value[MOVE_X]] = BoardItems.GOAL_WITH_BOX
+                    self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]] = BoardItems.GOAL_WITH_BOX
 
                 # La caja esta encima de un goal => consigo un punto
                 self.points += 1
@@ -207,14 +214,20 @@ class Sokoban:
     def get_points(self):
         return self.points
 
-    def get_goals(self):
-        return self.goals
+    def get_goal_count(self):
+        return len(self.goals)
+
+    def victory(self):
+        return self.points == len(self.goals)
 
     def get_board(self):
         return self.board
 
-    def victory(self):
-        return self.points == self.goals
+    def get_goals(self):
+        return self.goals
+
+    def get_boxes(self):
+        return self.boxes
 
     def __hash__(self):
         # TODO: posiblemente ineficiente usar el .tostring() (?)
@@ -235,8 +248,9 @@ class Sokoban:
 
         return _copy
 
+    # Comparamos por el costo
     def __lt__(self, other):
-        return self.points < other.points
+        return len(self.moves) < len(other.moves)
 
     def find_board_component(self, components: [BoardItems]):
         coordinates = []
@@ -246,13 +260,11 @@ class Sokoban:
                     coordinates.append((i, j))
         return coordinates
 
-
-
     def calculate_manhattan_distance(self):
         # devuelve array de tuplas representando posicion cajas [(1,2), (3,4), ...]
         boxes = self.find_board_component([BoardItems.BOX])
         # idem pero para posiciones goal
-        goal_locations = self.find_board_component([BoardItems.GOAL,BoardItems.GOAL_WITH_PLAYER])
+        goal_locations = self.find_board_component([BoardItems.GOAL, BoardItems.GOAL_WITH_PLAYER])
 
         # calcula la distancia de las sumas minimas de las cajas a su goal position.
         sum_distance = 0
@@ -266,8 +278,6 @@ class Sokoban:
                     minimum_distance = distance
 
             sum_distance += minimum_distance
-
-
 
         return sum_distance
 
