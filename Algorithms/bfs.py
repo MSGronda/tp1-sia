@@ -1,7 +1,7 @@
 import time
 from src.sokoban import *
 
-game = Sokoban("../Boards/board4.txt")
+game = Sokoban("../Boards/board2.txt")
 
 game_queue = [game]     # Va a acutar como una cola. Meto al final pero saco del principio
 seen_states = set()
@@ -10,9 +10,13 @@ start_time = time.time()
 
 
 nodesExpanded = 0
+solution_exists = 1
 
 while not game.victory():
 
+    if len(game_queue) == 0:
+        solution_exists = 0
+        break
     game = game_queue.pop(0)   # dequeue
 
     valid_moves = game.get_valid_moves()
@@ -35,8 +39,11 @@ while not game.victory():
 end_time = time.time()
 
 print(f"\n{end_time - start_time}s taken")
-print(f"{len(game.moves)} moves done in best solution")
-print(f"Expanded {nodesExpanded} nodes")
-print(f"{len(game_queue)} nodes left on the frontier")
-print(game.moves)
+if solution_exists:
+    print(f"{len(game.moves)} moves done in best solution")
+    print(f"Expanded {nodesExpanded} nodes")
+    print(f"{len(game_queue)} nodes left on the frontier")
+    print(game.moves)
+else:
+    print("No solution was found")
 

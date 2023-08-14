@@ -9,7 +9,12 @@ seen_states = set()
 nodesExpanded = 0
 start_time = time.time()
 
+solution_exists = 1
+
 while not game.victory():
+    if len(game_stack) == 0:
+        solution_exists = 0
+        break
     game = game_stack.pop()     # Obtengo el ultimo elemento
 
     valid_moves = game.get_valid_moves()
@@ -32,7 +37,11 @@ while not game.victory():
 end_time = time.time()
 
 print(f"\n{end_time - start_time}s taken")
-print(f"{len(game.moves)} moves done")
-print(f"expanded {nodesExpanded} nodes")
-print(f"{len(game_stack)} nodes left on the frontier")
-print(game.moves)
+if solution_exists:
+    print(f"{len(game.moves)} moves done")
+    print(f"expanded {nodesExpanded} nodes")
+    print(f"{len(game_stack)} nodes left on the frontier")
+    print(game.moves)
+else:
+    print("No solution was found")
+
