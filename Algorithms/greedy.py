@@ -4,14 +4,18 @@ import time
 from src.sokoban import *
 from src.BoardTree import BoardTreeNode
 
-game = Sokoban("../Boards/board4.txt")
-print("running")
+def greedy():
 
-mainNode = BoardTreeNode(game)
+    game = Sokoban("../Boards/board4.txt")
+    print("running")
 
-start = time.time()
-result = mainNode.expand()
-end = time.time()
-print(f"time it took: {end - start}")
-print(result.moves if result else "No solution was found")
+    mainNode = BoardTreeNode(game)
+
+    start = time.time()
+    result = mainNode.expand()
+    end = time.time()
+    return end, start, result
+
+# print(f"time it took: {end - start}")
+# print(result.moves if result else "No solution was found")
 
