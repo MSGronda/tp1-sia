@@ -1,9 +1,9 @@
 import time
 from src.sokoban import *
 
-def bfs():
+def bfs(board):
 
-    game = Sokoban("../Boards/board2.txt")
+    game = Sokoban(board)
 
     game_queue = [game]     # Va a acutar como una cola. Meto al final pero saco del principio
     seen_states = set()

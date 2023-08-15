@@ -1,9 +1,9 @@
 import time
 from src.sokoban import *
 
-def dfs():
+def dfs(board):
 
-    game = Sokoban("../Boards/board2.txt")
+    game = Sokoban(board)
 
     game_stack = [game]  # Va a actuar como un stack. Si pongo al final y saco del final => es lo mismo que un stack
     seen_states = set()

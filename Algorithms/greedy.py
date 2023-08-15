@@ -4,8 +4,8 @@ from src.sokoban import *
 from src.BoardTree import BoardTreeNode
 
 
-def greedy():
-    game = Sokoban("../Boards/board.txt")
+def greedy(board):
+    game = Sokoban(board)
     print("running")
 
     mainNode = BoardTreeNode(game)
