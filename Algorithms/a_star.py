@@ -3,8 +3,8 @@ from sortedcontainers import SortedList
 import time
 from src.AStarBoard import AStarBoard
 
-
-def a_star(board):
+def a_star(board,heuristicStrategy):
+    AStarBoard.calculate_heuristic_strategy = heuristicStrategy
     game = AStarBoard(board)
 
     game_queue = SortedList([game])  # Usamos una lista orderada (la frontera del arbol)

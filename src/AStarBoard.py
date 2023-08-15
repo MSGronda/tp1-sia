@@ -7,9 +7,13 @@ from src.sokoban import Sokoban
 
 
 class AStarBoard(Sokoban):
+    calculate_heuristic_strategy = None  # variable de clase que tiene puntero a funcion de heuristica
+
     def __init__(self, path):
         super().__init__(path)
         self.heuristic = None
+        if AStarBoard.calculate_heuristic_strategy is None:
+            raise ValueError("heuristic strategy must be initialized as a class variable before using A* algorithm")
 
     def __deepcopy__(self, memo={}):
 
@@ -22,8 +26,8 @@ class AStarBoard(Sokoban):
 
     def __lt__(self, other):
         if self.heuristic is None:
-            self.heuristic = calculate_manhattan_distance(self)
+            self.heuristic = AStarBoard.calculate_heuristic_strategy(self)
         if other.heuristic is None:
-            other.heuristic = calculate_manhattan_distance(other)
+            other.heuristic = AStarBoard.calculate_heuristic_strategy(other)
 
         return self.heuristic + len(self.moves) < other.heuristic + len(other.moves)

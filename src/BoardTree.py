@@ -6,10 +6,12 @@ from src.sokoban import *
 
 class BoardTreeNode:
     visitedStates = set()
-
+    heuristicStrategy = None # a inicializar con el puntero a funcion correspondiente
     def __init__(self, board: Sokoban):
         self.board = board
         self.children: list[tuple[int, BoardTreeNode, Moves]] = []
+        if BoardTreeNode.heuristicStrategy is None:
+            raise ValueError("Please initialize the desired heuristic as a class variable")
 
     def expand(self) -> Sokoban | None:
         # creo un nodo hijo por cada movimiento
@@ -24,7 +26,7 @@ class BoardTreeNode:
 
             if hash(alt_game) not in BoardTreeNode.visitedStates:
                 game_node = BoardTreeNode(alt_game)
-                current_distance = calculate_manhattan_distance(alt_game)
+                current_distance = BoardTreeNode.heuristicStrategy(alt_game)
                 self.children.append((current_distance, game_node, move))
 
         self.children.sort(key=lambda item: item[0])
@@ -55,7 +57,7 @@ class BoardTreeNode:
 
                     if hash(alt_game) not in visited_states:
                         game_node = BoardTreeNode(alt_game)
-                        current_distance = calculate_manhattan_distance(alt_game)
+                        current_distance = BoardTreeNode.heuristicStrategy(alt_game)
                         node.children.append((current_distance, game_node, move))
 
                 node.children.sort(key=lambda item: item[0])

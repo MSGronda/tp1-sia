@@ -10,12 +10,21 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.colors as pc
 import numpy as np
+import json
 
+
+from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
+from Algorithms.Heuristics.euclidian_distance import calculate_euclidian_distance
+from Algorithms.Heuristics.average_distance import calculate_average_distance
 
 board = "../Boards/board2.txt"
 ITERATIONS = 100
 
+
+
+
 with open(f"../Results/algorithm-times.csv", "w") as f:
+
     for _ in range(ITERATIONS):
         #BFS
         bfs_end_time, bfs_start_time, solution_exists, _, _, _ = bfs(board)
@@ -33,13 +42,13 @@ with open(f"../Results/algorithm-times.csv", "w") as f:
 
     for _ in range(ITERATIONS):
         #GREEDY
-        greedy_end_time, greedy_start_time, result = greedy(board)
+        greedy_end_time, greedy_start_time, result = greedy(board,calculate_euclidian_distance)
 
         greedy_time = greedy_end_time - greedy_start_time
         print(f"GREEDY, {greedy_time}", file=f)
     for _ in range(ITERATIONS):
         #A*
-        Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star(board)
+        Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star(board,calculate_manhattan_distance)
 
         Astar_time = Astar_end_time - Astar_start_time
         print(f"A_STAR, {Astar_time}", file=f)

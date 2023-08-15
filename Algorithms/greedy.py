@@ -4,19 +4,18 @@ from src.sokoban import *
 from src.BoardTree import BoardTreeNode
 
 
-def greedy(board):
+def greedy(board, heuristicStrategy):
     game = Sokoban(board)
     print("running")
 
+    BoardTreeNode.heuristicStrategy = heuristicStrategy #seteo la heuristica
     mainNode = BoardTreeNode(game)
 
     start = time.time()
-    result = mainNode.expand() #version reecursiva
-    #result = mainNode.iterative_expand() #version iterativa
+    #result = mainNode.expand() #version reecursiva
+    result = mainNode.iterative_expand() #version iterativa
     end = time.time()
     #print(f"{result.moves}\ntook {end - start}s")
     return end, start, result
 
 
-# print(f"time it took: {end - start}")
-# print(result.moves if result else "No solution was found")
