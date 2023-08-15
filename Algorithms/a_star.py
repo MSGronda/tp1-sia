@@ -15,7 +15,6 @@ nodesExpanded = 0
 solution_exists = 1
 
 while not game.victory():
-
     if len(game_queue) == 0:
         solution_exists = 0
         break
