@@ -83,7 +83,6 @@ class Sokoban:
 
     # Sirve para cuando hagamos deepcopy
     def build(self, board, moves, player=None, boxes=None, goals=None, points=0):
-
         self.board = board
         self.moves = copy.deepcopy(moves)
 
@@ -96,7 +95,7 @@ class Sokoban:
         else:
             self.player = copy.deepcopy(player)
             self.boxes = copy.deepcopy(boxes)
-            self.goals = copy.deepcopy(goals)       # TODO: pasar a shallow copy
+            self.goals = goals
             self.points = points
 
     # METODOS "PRIVADOS"
@@ -115,18 +114,18 @@ class Sokoban:
                     self.board[y, x] = BoardItems.EMPTY_SPACE  # Convierto a estatico
                 elif item == BoardItems.GOAL_WITH_PLAYER:
                     self.player = [x, y]
-                    self.goals.append([x, y])
+                    self.goals.append((x, y))
 
                     self.board[y, x] = BoardItems.GOAL      # Convierto a estatico
                 elif item == BoardItems.BOX:
-                    self.boxes.append([x, y])
+                    self.boxes.append((x, y))
 
                     self.board[y, x] = BoardItems.EMPTY_SPACE      # Convierto a estatico
                 elif item == BoardItems.GOAL:
-                    self.goals.append([x, y])
+                    self.goals.append((x, y))
                 elif item == BoardItems.GOAL_WITH_BOX:
-                    self.boxes.append([x, y])
-                    self.goals.append([x, y])
+                    self.boxes.append((x, y))
+                    self.goals.append((x, y))
 
                     self.points += 1
 
@@ -154,7 +153,7 @@ class Sokoban:
             return False
 
         # Caso: quiero mover una caja
-        if [new_x, new_y] in self.boxes:
+        if (new_x, new_y) in self.boxes:
             new_box_x = new_x + move.value[MOVE_X]
             new_box_y = new_y + move.value[MOVE_Y]
 
@@ -167,7 +166,7 @@ class Sokoban:
                 return False
 
             # Caso: donde quiero mover la caja hay otra caja
-            if [new_box_x, new_box_y] in self.boxes:
+            if (new_box_x, new_box_y) in self.boxes:
                 return False
 
         return True
@@ -184,7 +183,7 @@ class Sokoban:
         new_y = self.player[COORD_Y] + move.value[MOVE_Y]
 
         # Caso: quiero mover una caja
-        if [new_x, new_y] in self.boxes:
+        if (new_x, new_y) in self.boxes:
 
             # Caso: lo saque de un goal
             if self.board[new_y, new_x] == BoardItems.GOAL:
@@ -194,8 +193,8 @@ class Sokoban:
             new_box_y = new_y + move.value[MOVE_Y]
 
             # Updateo la posicion en la lista de posiciones de cajas
-            idx = self.boxes.index([new_x, new_y])
-            self.boxes[idx] = [new_box_x, new_box_y]
+            idx = self.boxes.index((new_x, new_y))
+            self.boxes[idx] = (new_box_x, new_box_y)
 
             # Caso: lo puse encima de un goal
             if self.board[new_box_y, new_box_x] == BoardItems.GOAL:
@@ -233,7 +232,6 @@ class Sokoban:
         return NotImplemented
 
     def __deepcopy__(self, memo=None):
-
         _copy = Sokoban(None)
         _copy.build(self.board, self.moves, self.player, self.boxes, self.goals, self.points)
 
