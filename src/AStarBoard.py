@@ -1,12 +1,15 @@
 import copy
 
+from Algorithms.Heuristics.average_distance import calculate_average_distance
+from Algorithms.Heuristics.euclidian_distance import calculate_euclidian_distance
 from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
 from src.sokoban import Sokoban
+
 
 class AStarBoard(Sokoban):
     def __init__(self, path):
         super().__init__(path)
-        self.manhattan_distance = None
+        self.heuristic = None
 
     def __deepcopy__(self, memo={}):
 
@@ -18,11 +21,9 @@ class AStarBoard(Sokoban):
         return _copy
 
     def __lt__(self, other):
-        if self.manhattan_distance is None:
-            self.manhattan_distance = calculate_manhattan_distance(self)
-        if other.manhattan_distance is None:
-            other.manhattan_distance = calculate_manhattan_distance(other)
+        if self.heuristic is None:
+            self.heuristic = calculate_manhattan_distance(self)
+        if other.heuristic is None:
+            other.heuristic = calculate_manhattan_distance(other)
 
-        return self.manhattan_distance + len(self.moves) < other.manhattan_distance + len(other.moves)
-
-
+        return self.heuristic + len(self.moves) < other.heuristic + len(other.moves)
