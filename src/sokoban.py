@@ -82,14 +82,22 @@ class Sokoban:
             self.build(board, [])
 
     # Sirve para cuando hagamos deepcopy
-    def build(self, board, moves):
+    def build(self, board, moves, player=[], boxes=[], goals=[], points=0):
 
         self.board = board
         self.moves = copy.deepcopy(moves)
 
         self.height, self.width = np.shape(self.board)
 
-        self.locate_items()
+        # Por eficiencia, puedo direcatmente pasarle una copia de los locations
+        # o lo puede calcular por su cuenta.
+        if len(player) == 0 or len(boxes) == 0 or len(goals) == 0:
+            self.locate_items()
+        else:
+            self.player = copy.deepcopy(player)
+            self.boxes = copy.deepcopy(boxes)
+            self.goals = copy.deepcopy(goals)
+            self.points = points
 
     # METODOS "PRIVADOS"
 
@@ -244,42 +252,13 @@ class Sokoban:
         board_copy = copy.copy(self.board)
 
         _copy = Sokoban(None)
-        _copy.build(board_copy, self.moves)
+        _copy.build(board_copy, self.moves, self.player, self.boxes, self.goals, self.points)
 
         return _copy
 
     # Comparamos por el costo
     def __lt__(self, other):
         return len(self.moves) < len(other.moves)
-
-    def find_board_component(self, components: [BoardItems]):
-        coordinates = []
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if self.board[i][j] in components:
-                    coordinates.append((i, j))
-        return coordinates
-
-    def calculate_manhattan_distance(self):
-        # devuelve array de tuplas representando posicion cajas [(1,2), (3,4), ...]
-        boxes = self.find_board_component([BoardItems.BOX])
-        # idem pero para posiciones goal
-        goal_locations = self.find_board_component([BoardItems.GOAL, BoardItems.GOAL_WITH_PLAYER])
-
-        # calcula la distancia de las sumas minimas de las cajas a su goal position.
-        sum_distance = 0
-        minimum_distance = None
-
-        for box_position in boxes:
-            for goal_location in goal_locations:
-                # calculo distancia entre cajas
-                distance = abs(box_position[0] - goal_location[0]) + abs(box_position[1] - goal_location[1])
-                if minimum_distance is None or distance < minimum_distance:
-                    minimum_distance = distance
-
-            sum_distance += minimum_distance
-
-        return sum_distance
 
     def print_board(self):
         for row in self.board:

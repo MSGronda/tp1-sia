@@ -1,5 +1,6 @@
 import queue
 
+from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
 from src.sokoban import *
 
 
@@ -23,7 +24,7 @@ class BoardTreeNode:
 
             if hash(alt_game) not in BoardTreeNode.visitedStates:
                 game_node = BoardTreeNode(alt_game)
-                current_distance = alt_game.calculate_manhattan_distance()
+                current_distance = calculate_manhattan_distance(alt_game)
                 self.children.append((current_distance, game_node, move))
 
         self.children.sort(key=lambda item: item[0])
@@ -54,7 +55,7 @@ class BoardTreeNode:
 
                     if hash(alt_game) not in visited_states:
                         game_node = BoardTreeNode(alt_game)
-                        current_distance = alt_game.calculate_manhattan_distance()
+                        current_distance = calculate_manhattan_distance(alt_game)
                         node.children.append((current_distance, game_node, move))
 
                 node.children.sort(key=lambda item: item[0])
