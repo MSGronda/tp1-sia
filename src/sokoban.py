@@ -68,11 +68,11 @@ class Sokoban:
         self.width = None
         self.height = None
 
-        self.moves = []
+        self.moves = None
 
         self.player = None
-        self.boxes = []
-        self.goals = []
+        self.boxes = None
+        self.goals = None
 
         self.points = 0
 
@@ -82,8 +82,7 @@ class Sokoban:
             self.build(board, [])
 
     # Sirve para cuando hagamos deepcopy
-    def build(self, board, moves, player=[], boxes=[], goals=[], points=0):
-
+    def build(self, board, moves, player=None, boxes=None, goals=None, points=0):
         self.board = board
         self.moves = copy.deepcopy(moves)
 
@@ -91,12 +90,14 @@ class Sokoban:
 
         # Por eficiencia, puedo direcatmente pasarle una copia de los locations
         # o lo puede calcular por su cuenta.
-        if len(player) == 0 or len(boxes) == 0 or len(goals) == 0:
+        if player is None or boxes is None or goals is None:
+            self.boxes = []
+            self.goals = []
             self.locate_items()
         else:
             self.player = copy.deepcopy(player)
             self.boxes = copy.deepcopy(boxes)
-            self.goals = copy.deepcopy(goals)
+            self.goals = goals
             self.points = points
 
     # METODOS "PRIVADOS"
@@ -111,19 +112,26 @@ class Sokoban:
 
                 if item == BoardItems.PLAYER:
                     self.player = [x, y]
+
+                    self.board[y, x] = BoardItems.EMPTY_SPACE  # Convierto a estatico
                 elif item == BoardItems.GOAL_WITH_PLAYER:
                     self.player = [x, y]
-                    self.goals.append([x, y])
+                    self.goals.append((x, y))
+
+                    self.board[y, x] = BoardItems.GOAL  # Convierto a estatico
                 elif item == BoardItems.BOX:
-                    self.boxes.append([x, y])
+                    self.boxes.append((x, y))
+
+                    self.board[y, x] = BoardItems.EMPTY_SPACE  # Convierto a estatico
                 elif item == BoardItems.GOAL:
-                    self.goals.append([x, y])
+                    self.goals.append((x, y))
                 elif item == BoardItems.GOAL_WITH_BOX:
-                    self.boxes.append([x, y])
-                    self.goals.append([x, y])
+                    self.boxes.append((x, y))
+                    self.goals.append((x, y))
 
                     self.points += 1
 
+                    self.board[y, x] = BoardItems.GOAL  # Convierto a estatico
 
     # METODOS "PUBLICOS"
 
@@ -135,89 +143,66 @@ class Sokoban:
         return valid_moves
 
     def can_move(self, move):
-        # Esta dentro de la matriz
-        if 0 <= self.player[COORD_X] + move.value[MOVE_X] < self.width and 0 <= self.player[COORD_Y] + move.value[MOVE_Y] < self.height:
+        new_x = self.player[COORD_X] + move.value[MOVE_X]
+        new_y = self.player[COORD_Y] + move.value[MOVE_Y]
 
-            block = self.board[self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]]
+        if new_x < 0 or new_x >= self.width or new_y < 0 or new_y >= self.height:
+            return False
 
-            # Caso: me muevo a un espacio vacio
-            if block == BoardItems.EMPTY_SPACE or block == BoardItems.GOAL:
-                return True
+        # Caso: me choco contra la pared
+        if self.board[new_y, new_x] == BoardItems.WALL:
+            return False
 
-            # Caso: quiere mover una caja
-            elif block == BoardItems.BOX or block == BoardItems.GOAL_WITH_BOX:
+        # Caso: quiero mover una caja
+        if (new_x, new_y) in self.boxes:
+            new_box_x = new_x + move.value[MOVE_X]
+            new_box_y = new_y + move.value[MOVE_Y]
 
-                # Me fijo que adonde quiero empujar la caja, es dentro de la matriz
-                if 0 <= self.player[COORD_X] + move.value[MOVE_X] * 2 < self.width and 0 <= self.player[COORD_Y] + move.value[MOVE_Y] * 2 < self.height:
+            # Caso: quiero mover la caja por fuera del mapa
+            if new_box_x < 0 or new_box_x >= self.width or new_box_y < 0 or new_box_y >= self.height:
+                return False
 
-                    move_to_block = self.board[
-                        self.player[COORD_Y] + move.value[MOVE_Y] * 2, self.player[COORD_X] + move.value[MOVE_X] * 2]
+            # Caso: donde quiero mover la caja hay una pared
+            if self.board[new_box_y, new_box_x] == BoardItems.WALL:
+                return False
 
-                    # Es valido adonde quiero mover la caja
-                    if move_to_block == BoardItems.EMPTY_SPACE or move_to_block == BoardItems.GOAL:
-                        return True
-        return False
+            # Caso: donde quiero mover la caja hay otra caja
+            if (new_box_x, new_box_y) in self.boxes:
+                return False
+
+        return True
 
     def move(self, move):
-
-        # TODO: eliminar por eficiencia (?)
-        # Testeo: con if: 7.8s, sin if: 6.9s
         if not self.can_move(move):
             return
 
         # Agrego el movimiento a los moviemientos hechos
         self.moves.append(move)
 
-        # Cambio la posicion anterior del jugador
-        old_pos_block = self.board[self.player[COORD_Y], self.player[COORD_X]]
+        # La nueva posicion del jugador
+        new_x = self.player[COORD_X] + move.value[MOVE_X]
+        new_y = self.player[COORD_Y] + move.value[MOVE_Y]
 
-        if old_pos_block == BoardItems.PLAYER:
-            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.EMPTY_SPACE
-        elif old_pos_block == BoardItems.GOAL_WITH_PLAYER:
-            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.GOAL
+        # Caso: quiero mover una caja
+        if (new_x, new_y) in self.boxes:
 
-        # Cambio la nueva posicion del jugador
-        self.player[COORD_X] += move.value[MOVE_X]
-        self.player[COORD_Y] += move.value[MOVE_Y]
-
-        new_pos_block = self.board[self.player[COORD_Y], self.player[COORD_X]]
-
-        if new_pos_block == BoardItems.EMPTY_SPACE:
-            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.PLAYER
-        elif new_pos_block == BoardItems.GOAL:
-            self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.GOAL_WITH_PLAYER
-        # Caso: quiero mover un caja
-        elif new_pos_block == BoardItems.BOX or new_pos_block == BoardItems.GOAL_WITH_BOX:
-
-            # Ahora el jugador esta donde estaba la caja
-            if new_pos_block == BoardItems.BOX:
-                self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.PLAYER
-            else:
-                # Desplace la caja de un goal
-                self.board[self.player[COORD_Y], self.player[COORD_X]] = BoardItems.GOAL_WITH_PLAYER
-
-                # La caja deja de estar encima de un goal => pierdo un punto
+            # Caso: lo saque de un goal
+            if self.board[new_y, new_x] == BoardItems.GOAL:
                 self.points -= 1
 
-            # = Muevo la caja a la nueva posicion =
+            new_box_x = new_x + move.value[MOVE_X]
+            new_box_y = new_y + move.value[MOVE_Y]
 
-            # Primero updateo la posicion que tenemos guardada aparte
+            # Updateo la posicion en la lista de posiciones de cajas
+            idx = self.boxes.index((new_x, new_y))
+            self.boxes[idx] = (new_box_x, new_box_y)
 
-            box_pos_idx = self.boxes.index([self.player[COORD_X], self.player[COORD_Y]]) # Adonde esta el jugador es donde solia estar la caja
-            self.boxes[box_pos_idx] = [self.player[COORD_X] + move.value[MOVE_X], self.player[COORD_Y] + move.value[MOVE_Y]] # Updateo la posicion
-
-            # Luego updateo la posicion en el board
-
-            new_pos_box_block = self.board[self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]]
-
-            if new_pos_box_block == BoardItems.EMPTY_SPACE:
-                self.board[self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]] = BoardItems.BOX
-            elif new_pos_box_block == BoardItems.GOAL:
-                self.board[
-                    self.player[COORD_Y] + move.value[MOVE_Y], self.player[COORD_X] + move.value[MOVE_X]] = BoardItems.GOAL_WITH_BOX
-
-                # La caja esta encima de un goal => consigo un punto
+            # Caso: lo puse encima de un goal
+            if self.board[new_box_y, new_box_x] == BoardItems.GOAL:
                 self.points += 1
+
+        self.player[COORD_X] = new_x
+        self.player[COORD_Y] = new_y
 
     def get_points(self):
         return self.points
@@ -240,19 +225,17 @@ class Sokoban:
     def __hash__(self):
         # TODO: posiblemente ineficiente usar el .tostring() (?)
         # Lo tengo que usar pq numpy no tiene hash para el ndarray
-        return hash(self.board.tostring())
+        self.boxes.sort()
+        return hash(str(self.player) + str(self.boxes))
 
     def __eq__(self, other):
-        if isinstance(other, Sokoban):
-            return (self.board == other.board).all()
-        return NotImplemented
+        self.boxes.sort()
+        other.boxes.sort()
+        return self.player == other.player and self.boxes == other.boxes
 
-    def __deepcopy__(self, memo={}):
-
-        board_copy = copy.copy(self.board)
-
+    def __deepcopy__(self, memo=None):
         _copy = Sokoban(None)
-        _copy.build(board_copy, self.moves, self.player, self.boxes, self.goals, self.points)
+        _copy.build(self.board, self.moves, self.player, self.boxes, self.goals, self.points)
 
         return _copy
 

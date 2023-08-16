@@ -15,13 +15,9 @@ class AStarBoard(Sokoban):
         if AStarBoard.calculate_heuristic_strategy is None:
             raise ValueError("heuristic strategy must be initialized as a class variable before using A* algorithm")
 
-    def __deepcopy__(self, memo={}):
-
-        board_copy = copy.copy(self.board)
-
+    def __deepcopy__(self, memo=None):
         _copy = AStarBoard(None)
-        _copy.build(board_copy, self.moves, self.player, self.boxes, self.goals, self.points)
-
+        _copy.build(self.board, self.moves, self.player, self.boxes, self.goals, self.points)
         return _copy
 
     def __lt__(self, other):
