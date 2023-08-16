@@ -35,7 +35,6 @@ def greedy(board, heuristicStrategy):
         stack.extend(children)
 
     end = time.time()
-
     return end, start, game
 
 # = = = = = Version anterior = = = = = =

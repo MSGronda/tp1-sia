@@ -1,6 +1,7 @@
 import csv
 import pandas as pd
 import plotly.express as px
+import aux
 
 from Algorithms.bfs import bfs
 from Algorithms.dfs import dfs
@@ -9,8 +10,9 @@ from Algorithms.a_star import a_star
 
 from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
 
+aux.check_results_directory()
 
-board = "../Boards/board.txt"
+board = "../Boards/board2.txt"
 
 with open(f"../Results/algorithm-steps.csv", "w") as f:
     #BFS
