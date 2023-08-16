@@ -11,25 +11,10 @@ class AStarBoard(Sokoban):
         super().__init__(path)
         self.heuristic = None
 
-    def __deepcopy__(self, memo={}):
-
-        board_copy = copy.copy(self.board)
-
+    def __deepcopy__(self, memo=None):
         _copy = AStarBoard(None)
-        _copy.build(board_copy, self.moves, self.player, self.boxes, self.goals, self.points)
-
+        _copy.build(self.board, self.moves, self.player, self.boxes, self.goals, self.points)
         return _copy
-
-    def __eq__(self, other):
-        if isinstance(other, AStarBoard):
-            return self.player == other.player and self.boxes == other.boxes
-        return NotImplemented
-
-    def __hash__(self):
-        # TODO: posiblemente ineficiente usar el .tostring() (?)
-        # Lo tengo que usar pq numpy no tiene hash para el ndarray
-        return hash(str(self.player) + str(self.boxes))
-
 
     def __lt__(self, other):
         if self.heuristic is None:

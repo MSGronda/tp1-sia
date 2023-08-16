@@ -68,11 +68,11 @@ class Sokoban:
         self.width = None
         self.height = None
 
-        self.moves = []
+        self.moves = None
 
         self.player = None
-        self.boxes = []
-        self.goals = []
+        self.boxes = None
+        self.goals = None
 
         self.points = 0
 
@@ -91,6 +91,8 @@ class Sokoban:
         # Por eficiencia, puedo direcatmente pasarle una copia de los locations
         # o lo puede calcular por su cuenta.
         if player is None or boxes is None or goals is None:
+            self.boxes = []
+            self.goals = []
             self.locate_items()
         else:
             self.player = copy.deepcopy(player)
@@ -116,11 +118,11 @@ class Sokoban:
                     self.player = [x, y]
                     self.goals.append((x, y))
 
-                    self.board[y, x] = BoardItems.GOAL      # Convierto a estatico
+                    self.board[y, x] = BoardItems.GOAL  # Convierto a estatico
                 elif item == BoardItems.BOX:
                     self.boxes.append((x, y))
 
-                    self.board[y, x] = BoardItems.EMPTY_SPACE      # Convierto a estatico
+                    self.board[y, x] = BoardItems.EMPTY_SPACE  # Convierto a estatico
                 elif item == BoardItems.GOAL:
                     self.goals.append((x, y))
                 elif item == BoardItems.GOAL_WITH_BOX:
@@ -130,7 +132,6 @@ class Sokoban:
                     self.points += 1
 
                     self.board[y, x] = BoardItems.GOAL  # Convierto a estatico
-
 
     # METODOS "PUBLICOS"
 
@@ -224,12 +225,13 @@ class Sokoban:
     def __hash__(self):
         # TODO: posiblemente ineficiente usar el .tostring() (?)
         # Lo tengo que usar pq numpy no tiene hash para el ndarray
+        self.boxes.sort()
         return hash(str(self.player) + str(self.boxes))
 
     def __eq__(self, other):
-        if isinstance(other, Sokoban):
-            return self.player == other.player and self.boxes == other.boxes
-        return NotImplemented
+        self.boxes.sort()
+        other.boxes.sort()
+        return self.player == other.player and self.boxes == other.boxes
 
     def __deepcopy__(self, memo=None):
         _copy = Sokoban(None)
