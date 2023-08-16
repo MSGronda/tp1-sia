@@ -1,16 +1,13 @@
 import math
 
-from Algorithms.bfs import bfs
-from Algorithms.dfs import dfs
-from Algorithms.greedy import greedy
-from Algorithms.a_star import a_star
+from Algorithms import bfs
+from Algorithms import dfs
+from Algorithms import greedy
+from Algorithms import a_star
 import csv
-import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 import plotly.colors as pc
 import numpy as np
-import json
 
 
 from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
@@ -27,28 +24,27 @@ with open(f"../Results/algorithm-times.csv", "w") as f:
 
     for _ in range(ITERATIONS):
         #BFS
-        bfs_end_time, bfs_start_time, solution_exists, _, _, _ = bfs(board)
-        print(solution_exists)
+        bfs_end_time, bfs_start_time, solution_exists, _, _, _ = bfs.bfs(board)
 
         bfs_time = bfs_end_time - bfs_start_time
         print(f"BFS, {bfs_time}", file=f)
 
     for _ in range(ITERATIONS):
         #DFS
-        dfs_end_time, dfs_start_time, solution_exists, _, _, _ = dfs(board)
+        dfs_end_time, dfs_start_time, solution_exists, _, _, _ = dfs.dfs(board)
 
         dfs_time = dfs_end_time - dfs_start_time
         print(f"DFS, {dfs_time}", file=f)
 
     for _ in range(ITERATIONS):
         #GREEDY
-        greedy_end_time, greedy_start_time, result = greedy(board,calculate_euclidian_distance)
+        greedy_end_time, greedy_start_time, result = greedy.greedy(board,calculate_euclidian_distance)
 
         greedy_time = greedy_end_time - greedy_start_time
         print(f"GREEDY, {greedy_time}", file=f)
     for _ in range(ITERATIONS):
         #A*
-        Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star(board,calculate_manhattan_distance)
+        Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star.a_star(board,calculate_manhattan_distance)
 
         Astar_time = Astar_end_time - Astar_start_time
         print(f"A_STAR, {Astar_time}", file=f)
