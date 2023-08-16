@@ -1,12 +1,15 @@
 import time
 from src.sokoban import *
 
+
 def dfs(board):
 
     game = Sokoban(board)
 
     game_stack = [game]  # Va a actuar como un stack. Si pongo al final y saco del final => es lo mismo que un stack
     seen_states = set()
+
+    seen_states.add(hash(game))
 
     nodesExpanded = 0
     start_time = time.time()
@@ -19,17 +22,13 @@ def dfs(board):
             break
         game = game_stack.pop()     # Obtengo el ultimo elemento
 
-        valid_moves = game.get_valid_moves()
-
-        for elem in valid_moves:
+        for elem in game.get_valid_moves():
             alt_game = copy.deepcopy(game)
             alt_game.move(elem)
             nodesExpanded += 1
+
             # TODO: no se si es correcto eliminar repetidos en este caso
-
             _hash = hash(alt_game)
-
-
 
             # Evitamos expandir estados que ya vimos
             if _hash not in seen_states:
@@ -39,12 +38,4 @@ def dfs(board):
     end_time = time.time()
     return end_time, start_time, solution_exists, game, nodesExpanded, game_stack
 
-# print(f"\n{end_time - start_time}s taken")
-# if solution_exists:
-#     print(f"{len(game.moves)} moves done")
-#     print(f"expanded {nodesExpanded} nodes")
-#     print(f"{len(game_stack)} nodes left on the frontier")
-#     print(game.moves)
-# else:
-#     print("No solution was found")
 
