@@ -28,4 +28,4 @@ def calculate_average_distance(board):
         sum_distance_euclid += minimum_distance_euclid
         sum_distance_manhattan += minimum_distance_manhattan
 
-    return (sum_distance_manhattan + sum_distance_euclid) / 2
+    return max(sum_distance_manhattan, sum_distance_euclid)

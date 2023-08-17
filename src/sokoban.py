@@ -11,6 +11,7 @@ class BoardItems(Enum):
     PLAYER = '$'
     GOAL_WITH_BOX = '@'
     GOAL_WITH_PLAYER = '&'
+    DEAD_ZONE = 'x'
 
 
 class Moves(Enum):
@@ -34,8 +35,15 @@ ITEM_MAP = {
     '$': BoardItems.PLAYER,
     '@': BoardItems.GOAL_WITH_BOX,
     '&': BoardItems.GOAL_WITH_PLAYER,
+    'x': BoardItems.DEAD_ZONE
 }
 
+WALL_MAP = {
+    Moves.UP: 0,
+    Moves.LEFT: 1,
+    Moves.RIGHT: 2,
+    Moves.DOWN: 3
+}
 
 def generate_board(path):
     # TODO: chequeos de todo tipo
@@ -132,6 +140,23 @@ class Sokoban:
                     self.points += 1
 
                     self.board[y, x] = BoardItems.GOAL  # Convierto a estatico
+
+                # Calculamos los dead zones
+                if self.board[y, x] == BoardItems.EMPTY_SPACE:
+                    walls = [0, 0, 0, 0]
+                    for move in Moves:
+                        adj_x = x + move.value[COORD_X]
+                        adj_y = y + move.value[COORD_Y]
+
+                        if 0 <= adj_x < self.width and 0 <= adj_y < self.height:
+                            if self.board[adj_y, adj_x] == BoardItems.WALL:
+                                walls[WALL_MAP[move]] = 1
+
+                    if (walls[WALL_MAP[Moves.UP]] == walls[WALL_MAP[Moves.LEFT]] == 1 or
+                            walls[WALL_MAP[Moves.UP]] == walls[WALL_MAP[Moves.RIGHT]] == 1 or
+                            walls[WALL_MAP[Moves.DOWN]] == walls[WALL_MAP[Moves.LEFT]] == 1 or
+                            walls[WALL_MAP[Moves.DOWN]] == walls[WALL_MAP[Moves.RIGHT]] == 1):
+                        self.board[y, x] = BoardItems.DEAD_ZONE
 
     # METODOS "PUBLICOS"
 

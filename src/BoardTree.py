@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import queue
 
 from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
