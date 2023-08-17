@@ -1,5 +1,5 @@
 import math
-import aux
+import check
 from Algorithms import bfs
 from Algorithms import dfs
 from Algorithms import greedy
@@ -13,7 +13,7 @@ from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distanc
 from Algorithms.Heuristics.euclidian_distance import calculate_euclidian_distance
 from Algorithms.Heuristics.average_distance import calculate_average_distance
 
-aux.check_results_directory()
+check.check_results_directory()
 
 board = "../Boards/board2.txt"
 ITERATIONS = 100
