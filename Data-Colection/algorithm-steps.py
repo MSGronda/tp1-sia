@@ -2,7 +2,6 @@ import csv
 import pandas as pd
 import plotly.express as px
 import check
-
 from Algorithms.bfs import bfs
 from Algorithms.dfs import dfs
 from Algorithms.greedy import greedy
@@ -12,7 +11,7 @@ from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distanc
 
 check.check_results_directory()
 
-board = "../Boards/board2.txt"
+board = "../Boards/board_benchmark.txt"
 
 with open(f"../Results/algorithm-steps.csv", "w") as f:
     #BFS
@@ -48,7 +47,11 @@ with open(f"../Results/algorithm-steps.csv", "r") as stepdata:
 
 df = pd.DataFrame(data)
 
-fig = px.bar(df, x='Algorithm', y='Steps', title='Solution Steps for Algorithm', color="Algorithm")
+fig = px.bar(df, x='Algorithm', y='Steps', title='Solution Steps for Algorithm', color="Algorithm",
+                text='Steps',  # Add this to include the step values as text labels
+                labels={'Steps': 'Steps'}  # You can customize the label here
+             )
+fig.update_traces(texttemplate='%{text}', textposition='auto')  # Set the text label format and position
 fig.update_yaxes(range=[0, max(df['Steps']) + 2])  # Adjust the range_y to include some margin above the max value
 fig.show()
 

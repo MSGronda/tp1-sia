@@ -15,8 +15,8 @@ from Algorithms.Heuristics.average_distance import calculate_average_distance
 
 check.check_results_directory()
 
-board = "../Boards/board2.txt"
-ITERATIONS = 100
+board = "../Boards/board_benchmark.txt"
+ITERATIONS = 10
 
 with open(f"../Results/algorithm-times.csv", "w") as f:
     print("Running BFS")
@@ -91,11 +91,16 @@ error = [bfs_error, dfs_error, greedy_error, Astar_error]
 num_colors = len(algorithms)
 distinct_colors = pc.qualitative.Plotly * int(np.ceil(num_colors / len(pc.qualitative.Plotly)))
 
+# Create text labels for each bar
+text_labels = [f'{value:.4f}' for value in CTEs]
+
 # Create a bar chart with error bars
 data = [
     go.Bar(
         x=algorithms,
         y=CTEs,
+        text=text_labels,
+        textposition='auto',
         error_y=dict(type='data', array=error, visible=True),
         marker_color=distinct_colors,
         opacity=0.6
@@ -103,9 +108,9 @@ data = [
 ]
 
 layout = go.Layout(
-    title='Algorithm Performance Comparison',
+    title='Algorithm Time Performance Comparison',
     xaxis=dict(title='Algorithms'),
-    yaxis=dict(title='Time'),
+    yaxis=dict(title='Time (s)'),
     showlegend=False
 )
 
