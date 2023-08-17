@@ -15,7 +15,6 @@ from Algorithms.Heuristics.euclidian_distance import calculate_euclidian_distanc
 from Algorithms.Heuristics.average_distance import calculate_average_distance
 
 
-
 aux.check_results_directory()
 
 board = "../Boards/board.txt"
@@ -24,14 +23,16 @@ ITERATIONS = 100
 
 
 with open(f"../Results/algorithm-times.csv", "w") as f:
-
+    print("Running BFS")
     for _ in range(ITERATIONS):
         #BFS
+
         bfs_end_time, bfs_start_time, solution_exists, _, _, _ = bfs.bfs(board)
 
         bfs_time = bfs_end_time - bfs_start_time
         print(f"BFS, {bfs_time}", file=f)
 
+    print("Running DFS")
     for _ in range(ITERATIONS):
         #DFS
         dfs_end_time, dfs_start_time, solution_exists, _, _, _ = dfs.dfs(board)
@@ -39,12 +40,15 @@ with open(f"../Results/algorithm-times.csv", "w") as f:
         dfs_time = dfs_end_time - dfs_start_time
         print(f"DFS, {dfs_time}", file=f)
 
+    print("Running Greedy")
     for _ in range(ITERATIONS):
         #GREEDY
-        greedy_end_time, greedy_start_time, result = greedy.greedy(board,calculate_euclidian_distance)
+        greedy_end_time, greedy_start_time, result = greedy.greedy(board,calculate_manhattan_distance)
 
         greedy_time = greedy_end_time - greedy_start_time
         print(f"GREEDY, {greedy_time}", file=f)
+
+    print("Running A*")
     for _ in range(ITERATIONS):
         #A*
         Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star.a_star(board,calculate_manhattan_distance)
