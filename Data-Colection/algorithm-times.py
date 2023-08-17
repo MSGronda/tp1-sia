@@ -9,49 +9,42 @@ import plotly.graph_objects as go
 import plotly.colors as pc
 import numpy as np
 
-
 from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
 from Algorithms.Heuristics.euclidian_distance import calculate_euclidian_distance
 from Algorithms.Heuristics.average_distance import calculate_average_distance
 
-
-
 aux.check_results_directory()
 
-board = "../Boards/board.txt"
+board = "../Boards/board2.txt"
 ITERATIONS = 100
 
-
-
 with open(f"../Results/algorithm-times.csv", "w") as f:
-
     for _ in range(ITERATIONS):
-        #BFS
+        # BFS
         bfs_end_time, bfs_start_time, solution_exists, _, _, _ = bfs.bfs(board)
 
         bfs_time = bfs_end_time - bfs_start_time
         print(f"BFS, {bfs_time}", file=f)
 
     for _ in range(ITERATIONS):
-        #DFS
+        # DFS
         dfs_end_time, dfs_start_time, solution_exists, _, _, _ = dfs.dfs(board)
 
         dfs_time = dfs_end_time - dfs_start_time
         print(f"DFS, {dfs_time}", file=f)
 
     for _ in range(ITERATIONS):
-        #GREEDY
-        greedy_end_time, greedy_start_time, result = greedy.greedy(board,calculate_euclidian_distance)
+        # GREEDY
+        greedy_end_time, greedy_start_time, result = greedy.greedy(board, calculate_euclidian_distance)
 
         greedy_time = greedy_end_time - greedy_start_time
         print(f"GREEDY, {greedy_time}", file=f)
     for _ in range(ITERATIONS):
-        #A*
-        Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star.a_star(board,calculate_manhattan_distance)
+        # A*
+        Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star.a_star(board, calculate_manhattan_distance)
 
         Astar_time = Astar_end_time - Astar_start_time
         print(f"A_STAR, {Astar_time}", file=f)
-
 
 bfs_data = []
 dfs_data = []
@@ -64,7 +57,7 @@ with open(f"../Results/algorithm-times.csv", "r") as timedata:
             bfs_data.append(float(time))
         elif algorithm == 'DFS':
             dfs_data.append(float(time))
-        elif algorithm =='A_STAR':
+        elif algorithm == 'A_STAR':
             Astar_data.append(float(time))
         else:
             greedy_data.append(float(time))
@@ -112,4 +105,3 @@ layout = go.Layout(
 
 fig = go.Figure(data=data, layout=layout)
 fig.show()
-
