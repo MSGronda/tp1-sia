@@ -28,11 +28,9 @@ with open(f"../Results/algorithm-steps.csv", "w") as f:
 
 
     #GREEDY
-    # _, _, result = greedy(board, calculate_manhattan_distance)
-    #
-    # print("GREEDY")
-    # print(len(result.moves))
-    #print(f"GREEDY, {len(result.moves)}", file=f)
+    _, _, result = greedy(board, calculate_manhattan_distance)
+    print("Running Greedy")
+    print(f"GREEDY, {len(result.moves)}", file=f)
 
     #A*
     print("Running A*")
