@@ -39,7 +39,7 @@ with open(f"../Results/algorithm-times.csv", "w") as f:
     print("Running Greedy")
     for _ in range(ITERATIONS):
         #GREEDY
-        greedy_end_time, greedy_start_time, result = greedy.greedy(board,calculate_manhattan_distance)
+        greedy_end_time, greedy_start_time, result, _ ,_ ,_ = greedy.greedy(board,calculate_manhattan_distance)
 
         greedy_time = greedy_end_time - greedy_start_time
         print(f"GREEDY, {greedy_time}", file=f)

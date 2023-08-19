@@ -1,6 +1,14 @@
 {
-  "generateGraphs" : true,
-  "runIndividualAlgorithm" : {
+  "singleAlgorithmData" : {
+    "run": true,
+    "showBoardMoves" : true,
+    "algorithm": "greedy",
+    "heuristic": "manhattan_distance",
+    "board": "./Boards/board2.txt"
+  },
 
+  "graphData" : {
+    "run": true,
+    "showGraphData" : true
   }
 }
