@@ -10,7 +10,7 @@ from Algorithms.a_star import a_star
 from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
 
 
-def algorithmSteps(board):
+def algorithmSteps(board,heuristic):
     check.check_results_directory()
     with open(f"../Results/algorithm-steps.csv", "w") as f:
         #BFS
@@ -26,13 +26,13 @@ def algorithmSteps(board):
 
 
         #GREEDY
-        _, _, solution_exists, result , _ , _ = greedy(board, calculate_manhattan_distance)
+        _, _, solution_exists, result , _ , _ = greedy(board, heuristic)
         print("Running Greedy")
         print(f"GREEDY, {len(result.moves)}", file=f)
 
         #A*
         print("Running A*")
-        _, _, solution_exists, a_star_game, _, _ = a_star(board, calculate_manhattan_distance)
+        _, _, solution_exists, a_star_game, _, _ = a_star(board, heuristic)
         print(f"A*, {len(a_star_game.moves)}", file=f)
 
     data = []

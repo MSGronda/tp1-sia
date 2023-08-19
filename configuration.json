@@ -16,11 +16,13 @@
   "timesComparison" : {
     "run": false,
     "board": "board2.txt",
-    "iterations": 100
+    "iterations": 100,
+    "heuristic": "manhattan_distance"
   },
 
   "stepsComparison" : {
     "run": true,
-    "board": "board_benchmark.txt"
+    "board": "board_benchmark.txt",
+    "heuristic": "manhattan_distance"
   }
 }

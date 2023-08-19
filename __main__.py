@@ -33,13 +33,15 @@ HEURISTICSMAP = {"average_distance": calculate_average_distance,
 def runAlgorithmSteps(data:dict):
     if not data["run"]:
         return
-    algorithmSteps(f"./Boards/{data['board']}")
+    heuristic_name = data["heuristic"]
+    algorithmSteps(f"./Boards/{data['board']}",HEURISTICSMAP[heuristic_name])
 
 
 def runAlgorithmTimes(data:dict):
     if not data["run"]:
         return
-    algorithmTimes(data["iterations"], f"./Boards/{data['board']}")
+    heuristic_name = data["heuristic"]
+    algorithmTimes(data["iterations"], f"./Boards/{data['board']}",HEURISTICSMAP[heuristic_name])
 
 def runHeuristicsComparison(data: dict):
     if not data["run"]:

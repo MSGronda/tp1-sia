@@ -15,7 +15,7 @@ from Algorithms.Heuristics.average_distance import calculate_average_distance
 
 
 
-def algorithmTimes(iterations,board):
+def algorithmTimes(iterations,board,heuristic):
     check.check_results_directory()
 
     with open(f"../Results/algorithm-times.csv", "w") as f:
@@ -39,7 +39,7 @@ def algorithmTimes(iterations,board):
         print("Running Greedy")
         for _ in range(iterations):
             #GREEDY
-            greedy_end_time, greedy_start_time, result, _ ,_ ,_ = greedy.greedy(board,calculate_manhattan_distance)
+            greedy_end_time, greedy_start_time, result, _ ,_ ,_ = greedy.greedy(board,heuristic)
 
             greedy_time = greedy_end_time - greedy_start_time
             print(f"GREEDY, {greedy_time}", file=f)
@@ -47,7 +47,7 @@ def algorithmTimes(iterations,board):
         print("Running A*")
         for _ in range(iterations):
             # A*
-            Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star.a_star(board, calculate_manhattan_distance)
+            Astar_end_time, Astar_start_time, solution_exists, _, _, _ = a_star.a_star(board, heuristic)
 
             Astar_time = Astar_end_time - Astar_start_time
             print(f"A_STAR, {Astar_time}", file=f)
