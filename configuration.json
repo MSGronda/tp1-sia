@@ -1,14 +1,26 @@
 {
   "singleAlgorithmData" : {
-    "run": true,
+    "run": false,
     "showBoardMoves" : true,
-    "algorithm": "greedy",
+    "algorithm": "bfs",
     "heuristic": "manhattan_distance",
-    "board": "./Boards/board2.txt"
+    "board": "board2.txt"
   },
 
-  "graphData" : {
+  "heuristicsComparison" : {
+    "run": false,
+    "board": "board2.txt",
+    "iterations": 100
+  },
+
+  "timesComparison" : {
+    "run": false,
+    "board": "board2.txt",
+    "iterations": 100
+  },
+
+  "stepsComparison" : {
     "run": true,
-    "showGraphData" : true
+    "board": "board_benchmark.txt"
   }
 }

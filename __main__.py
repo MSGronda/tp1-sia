@@ -12,6 +12,9 @@ from Algorithms.Heuristics.euclidian_distance import calculate_euclidian_distanc
 from Algorithms.Heuristics.lost_game import lost_game_heuristic
 from Algorithms.Heuristics.manhattan_wall_detection import calculate_manhattan_distance_wall_detection
 from Algorithms.Heuristics.average_distance import calculate_average_distance
+from DataCollection.heuristicsComparison import heuristicsComparison
+from DataCollection.algorithmTimes import algorithmTimes
+from DataCollection.algorithmSteps import algorithmSteps
 
 FUNCMAP = {"bfs": bfs, "dfs": dfs, "greedy": greedy, "a_star": a_star}
 HEURISTICSMAP = {"average_distance": calculate_average_distance,
@@ -26,10 +29,28 @@ HEURISTICSMAP = {"average_distance": calculate_average_distance,
 # Cantidad de nodos frontera OK
 # Solución(camino desde estado inicial al final) OK
 # Tiempo de procesamiento OK
+
+def runAlgorithmSteps(data:dict):
+    if not data["run"]:
+        return
+    algorithmSteps(f"./Boards/{data['board']}")
+
+
+def runAlgorithmTimes(data:dict):
+    if not data["run"]:
+        return
+    algorithmTimes(data["iterations"], f"./Boards/{data['board']}")
+
+def runHeuristicsComparison(data: dict):
+    if not data["run"]:
+        return
+    heuristicsComparison(data["iterations"],f"./Boards/{data['board']}")
+
+
 def runSingleAlgorithm(data: dict):
     if not data["run"]:
         return
-    boardPath = data["board"]
+    boardPath = f"./Boards/{data['board']}"
     function = FUNCMAP[data["algorithm"]]
     heuristic_name = data["heuristic"]
     end, start, solution_exists, game, nodesExpanded, frontierNodesLeft = function(boardPath, HEURISTICSMAP[
@@ -57,3 +78,6 @@ with open("configuration.json", "r") as f:
     configFile = json.load(f)
 
 runSingleAlgorithm(configFile["singleAlgorithmData"])
+runHeuristicsComparison(configFile["heuristicsComparison"])
+runAlgorithmTimes(configFile["timesComparison"])
+runAlgorithmSteps(configFile["stepsComparison"])
