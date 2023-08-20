@@ -53,6 +53,5 @@ def algorithmFrontier(board, heuristic):
     fig.show()
 
 
-algorithmFrontier("../Boards/board2.txt", combined_heuristic)
 
 

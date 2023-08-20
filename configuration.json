@@ -19,10 +19,19 @@
     "iterations": 100,
     "heuristic": "manhattan_distance"
   },
-
   "stepsComparison" : {
-    "run": true,
+    "run": false,
     "board": "board_benchmark.txt",
     "heuristic": "manhattan_distance"
+  },
+  "frontierComparison" : {
+    "run": false,
+    "board": "board2.txt",
+    "heuristic": "manhattan_distance"
+  },
+  "nodesExpandedComparison" : {
+    "run": true,
+    "board": "board2.txt",
+    "heuristic":"lost_game"
   }
 }

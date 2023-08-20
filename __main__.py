@@ -15,6 +15,8 @@ from Algorithms.Heuristics.average_distance import calculate_average_distance
 from DataCollection.heuristicsComparison import heuristicsComparison
 from DataCollection.algorithmTimes import algorithmTimes
 from DataCollection.algorithmSteps import algorithmSteps
+from DataCollection.algorithmFrontier import algorithmFrontier
+from DataCollection.algorithmNodes import algorithmNodes
 
 FUNCMAP = {"bfs": bfs, "dfs": dfs, "greedy": greedy, "a_star": a_star}
 HEURISTICSMAP = {"average_distance": calculate_average_distance,
@@ -30,23 +32,38 @@ HEURISTICSMAP = {"average_distance": calculate_average_distance,
 # Solución(camino desde estado inicial al final) OK
 # Tiempo de procesamiento OK
 
-def runAlgorithmSteps(data:dict):
+def runAlgorithmNodes(data: dict):
     if not data["run"]:
         return
     heuristic_name = data["heuristic"]
-    algorithmSteps(f"./Boards/{data['board']}",HEURISTICSMAP[heuristic_name])
+    algorithmNodes(f"./boards/{data['board']}", HEURISTICSMAP[heuristic_name])
 
 
-def runAlgorithmTimes(data:dict):
+def runAlgorithmFrontier(data: dict):
     if not data["run"]:
         return
     heuristic_name = data["heuristic"]
-    algorithmTimes(data["iterations"], f"./Boards/{data['board']}",HEURISTICSMAP[heuristic_name])
+    algorithmFrontier(f"./boards/{data['board']}", HEURISTICSMAP[heuristic_name])
+
+
+def runAlgorithmSteps(data: dict):
+    if not data["run"]:
+        return
+    heuristic_name = data["heuristic"]
+    algorithmSteps(f"./Boards/{data['board']}", HEURISTICSMAP[heuristic_name])
+
+
+def runAlgorithmTimes(data: dict):
+    if not data["run"]:
+        return
+    heuristic_name = data["heuristic"]
+    algorithmTimes(data["iterations"], f"./Boards/{data['board']}", HEURISTICSMAP[heuristic_name])
+
 
 def runHeuristicsComparison(data: dict):
     if not data["run"]:
         return
-    heuristicsComparison(data["iterations"],f"./Boards/{data['board']}")
+    heuristicsComparison(data["iterations"], f"./Boards/{data['board']}")
 
 
 def runSingleAlgorithm(data: dict):
@@ -83,3 +100,5 @@ runSingleAlgorithm(configFile["singleAlgorithmData"])
 runHeuristicsComparison(configFile["heuristicsComparison"])
 runAlgorithmTimes(configFile["timesComparison"])
 runAlgorithmSteps(configFile["stepsComparison"])
+runAlgorithmFrontier(configFile["frontierComparison"])
+runAlgorithmNodes(configFile["nodesExpandedComparison"])

@@ -53,6 +53,5 @@ def algorithmNodes(board, heuristic):
     fig.show()
 
 
-algorithmNodes("../Boards/board2.txt", combined_heuristic)
 
 
