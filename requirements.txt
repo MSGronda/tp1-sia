@@ -1,1 +1,4 @@
 numpy~=1.25.2
+sortedcontainers~=2.4.0
+pandas~=2.0.3
+plotly~=5.16.0

@@ -45,6 +45,7 @@ WALL_MAP = {
     Moves.DOWN: 3
 }
 
+
 def generate_board(path):
     # TODO: chequeos de todo tipo
 
@@ -268,8 +269,27 @@ class Sokoban:
     def __lt__(self, other):
         return len(self.moves) < len(other.moves)
 
-    def print_board(self):
-        for row in self.board:
-            for elem in row:
-                print(elem.value, end="")
-            print("")
+    def __str__(self):
+        game_map = ""
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
+                item = None
+                # caso jugador-player
+                if [x, y] == self.player:
+                    if (x, y) in self.goals:
+                        item = BoardItems.GOAL_WITH_PLAYER
+                    else:
+                        item = BoardItems.PLAYER
+                elif (x, y) in self.boxes:
+                    if (x, y) in self.goals:
+                        item = BoardItems.GOAL_WITH_BOX
+                    else:
+                        item = BoardItems.BOX
+                elif (x, y) in self.goals:
+                    item = BoardItems.GOAL
+                else:
+                    item = self.board[y][x] if self.board[y][x] != BoardItems.DEAD_ZONE else BoardItems.EMPTY_SPACE
+                game_map += item.value
+            game_map += "\n"
+
+        return game_map

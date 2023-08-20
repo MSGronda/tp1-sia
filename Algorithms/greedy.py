@@ -16,12 +16,12 @@ def greedy(board, heuristicStrategy):
     visited_states = set()
 
     visited_states.add(hash(game))
+    nodesExpanded = 0
 
     while stack and not game.victory():
         game = stack.pop()
-
         children = SortedList()
-
+        nodesExpanded += 1
         for move in game.get_valid_moves():
             alt_game = copy.deepcopy(game)
             alt_game.move(move)
@@ -35,7 +35,7 @@ def greedy(board, heuristicStrategy):
         stack.extend(children)
 
     end = time.time()
-    return end, start, game
+    return end, start, game.victory() , game, nodesExpanded, len(stack)
 
 # = = = = = Version anterior = = = = = =
 

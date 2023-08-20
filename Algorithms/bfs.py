@@ -2,7 +2,7 @@ import time
 from src.sokoban import *
 
 
-def bfs(board):
+def bfs(board, heuristic = None):
 
     game = Sokoban(board)
 
@@ -22,11 +22,11 @@ def bfs(board):
             solution_exists = 0
             break
         game = game_queue.pop(0)   # dequeue
+        nodesExpanded += 1
 
         for elem in game.get_valid_moves():
             alt_game = copy.deepcopy(game)
             alt_game.move(elem)
-            nodesExpanded += 1
 
             _hash = hash(alt_game)
 
@@ -39,6 +39,6 @@ def bfs(board):
 
     end_time = time.time()
 
-    return end_time, start_time, solution_exists, game, nodesExpanded, game_queue
+    return end_time, start_time, solution_exists, game, nodesExpanded, len(game_queue)
 
 

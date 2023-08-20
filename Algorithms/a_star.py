@@ -24,11 +24,10 @@ def a_star(board,heuristicStrategy):
             break
 
         game = game_queue.pop(0)
-
+        nodesExpanded += 1
         for elem in game.get_valid_moves():
             alt_game = copy.deepcopy(game)
             alt_game.move(elem)
-            nodesExpanded += 1
 
             _hash = hash(alt_game)
 
@@ -37,6 +36,6 @@ def a_star(board,heuristicStrategy):
                 game_queue.add(alt_game)
 
     end_time = time.time()
-    return end_time, start_time, solution_exists, game, nodesExpanded, game_queue
+    return end_time, start_time, solution_exists, game, nodesExpanded, len(game_queue)
 
 
