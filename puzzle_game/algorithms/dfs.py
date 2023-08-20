@@ -1,8 +1,7 @@
 from puzzle_game.game import Game
-from puzzle_game.utils.coordinates import Directions
 from collections import deque
 
-game_first_instance = Game("./boards/easy5")
+game_first_instance = Game("../boards/difficult", 0)
 gamesToProcess = deque([game_first_instance])
 alreadyChecked = set()
 steps = 0
@@ -16,13 +15,15 @@ while len(gamesToProcess) > 0:
 
     if game.is_solved():
         print(f"Game is solved! All it took was {steps} steps")
+        print(f"Depth of the winning game {game.depth}")
         exit()
 
-    for direction in Directions:
-        if game.can_move(direction):
-            new_game = game.get_new_game_by_move(direction)
+    possible_moves = game.get_possible_moves()
+    for move in possible_moves:
+        if game.can_move(move):
+            new_game = game.get_new_game_by_move(move)
             if hash(new_game) not in alreadyChecked:
-                gamesToProcess.appendleft(new_game)
+                gamesToProcess.append(new_game)
             else:
                 casesAvoid += 1
 

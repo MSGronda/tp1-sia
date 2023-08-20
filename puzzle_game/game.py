@@ -19,7 +19,8 @@ class Game:
                       3: Coordinates(2, 0), 4: Coordinates(2, 1), 5: Coordinates(2, 2),
                       6: Coordinates(1, 2), 7: Coordinates(0, 2), 8: Coordinates(0, 1)}
 
-    def __init__(self, pathToBoard):
+    def __init__(self, pathToBoard, depth):
+        self.depth = depth  # depth of this board node in the tree
         if pathToBoard is not None:
             self.board = self.load_board(pathToBoard)
 
@@ -30,6 +31,15 @@ class Game:
                 hash *= 10
                 hash += self.board[y_axis][x_axis]
         return hash
+
+    def __str__(self):
+        string = ""
+        for y_axis in range(BOARDSIZE):
+            for x_axis in range(BOARDSIZE):
+                string += str(self.board[y_axis][x_axis])
+                string += ' '
+            string += '\n'
+        return string
 
     def load_board(self, pathToBoard):
         with open(pathToBoard) as boardInfoFile:
@@ -59,10 +69,9 @@ class Game:
         return blank_space_coordinates
 
     def get_possible_moves(self):
-        blank_space_coordinates = self.get_blank_space_coordinates()
         possible_moves = []
         for move in Directions:
-            if self.can_move(move, blank_space_coordinates):
+            if self.can_move(move):
                 possible_moves.append(move)
         return possible_moves
 
@@ -75,15 +84,16 @@ class Game:
         y = blank_space_coordinates.y
 
         if direction == Directions.RIGHT:
-            self.swap(x, y, x+1, y)
+            self.swap(x, y, x + 1, y)
         elif direction == Directions.LEFT:
-            self.swap(x, y, x-1, y)
+            self.swap(x, y, x - 1, y)
         elif direction == Directions.UP:
-            self.swap(x, y, x, y-1)
+            self.swap(x, y, x, y - 1)
         elif direction == Directions.DOWN:
-            self.swap(x, y, x, y+1)
+            self.swap(x, y, x, y + 1)
 
     def get_new_game_by_move(self, direction):
         new_game = copy.deepcopy(self)
         new_game.move(direction)
+        new_game.depth = self.depth + 1
         return new_game
