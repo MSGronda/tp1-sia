@@ -1,18 +1,16 @@
 from puzzle_game.game import Game
-from puzzle_game.coordinates import Directions
+from puzzle_game.utils.coordinates import Directions
 from collections import deque
 
-game_first_instance = Game("./boards/easy3")
+game_first_instance = Game("./boards/easy5")
 gamesToProcess = deque([game_first_instance])
 alreadyChecked = set()
 steps = 0
+casesAvoid = 0
 
 while len(gamesToProcess) > 0:
     game = gamesToProcess.popleft()
     steps += 1
-
-    if hash(game) in alreadyChecked:
-        continue
 
     alreadyChecked.add(hash(game))
 
@@ -22,6 +20,10 @@ while len(gamesToProcess) > 0:
 
     for direction in Directions:
         if game.can_move(direction):
-            gamesToProcess.append(game.get_new_game_by_move(direction))
+            new_game = game.get_new_game_by_move(direction)
+            if hash(new_game) not in alreadyChecked:
+                gamesToProcess.appendleft(new_game)
+            else:
+                casesAvoid += 1
 
-print("Game couldn't be solved")
+print(f"Game couldn't be solved, cases avoided = {casesAvoid}, checked cases = {steps}")

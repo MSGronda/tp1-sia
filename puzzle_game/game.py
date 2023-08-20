@@ -1,4 +1,4 @@
-from puzzle_game.coordinates import Coordinates, Directions
+from puzzle_game.utils.coordinates import Coordinates, Directions
 import copy
 
 BOARDSIZE = 3
