@@ -7,9 +7,6 @@ from Algorithms.dfs import dfs
 from Algorithms.greedy import greedy
 from Algorithms.a_star import a_star
 
-from Algorithms.Heuristics.manhattan_distance import calculate_manhattan_distance
-
-
 def algorithmSteps(board,heuristic):
     check.check_results_directory()
     with open(f"../Results/algorithm-steps.csv", "w") as f:
