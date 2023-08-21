@@ -2,25 +2,25 @@
   "singleAlgorithmData" : {
     "run": false,
     "showBoardMoves" : true,
-    "algorithm": "bfs",
+    "algorithm": "a_star",
     "heuristic": "manhattan_distance",
-    "board": "board2.txt"
+    "board": "board_benchmark.txt"
   },
 
   "heuristicsComparison" : {
     "run": false,
     "board": "board2.txt",
-    "iterations": 100
+    "iterations": 400
   },
 
   "timesComparison" : {
     "run": false,
-    "board": "board2.txt",
-    "iterations": 100,
-    "heuristic": "manhattan_distance"
+    "board": "board_benchmark.txt",
+    "iterations": 5,
+    "heuristic": "lost_game"
   },
   "stepsComparison" : {
-    "run": false,
+    "run": true,
     "board": "board_benchmark.txt",
     "heuristic": "manhattan_distance"
   },
@@ -30,7 +30,7 @@
     "heuristic": "manhattan_distance"
   },
   "nodesExpandedComparison" : {
-    "run": true,
+    "run": false,
     "board": "board2.txt",
     "heuristic":"lost_game"
   }
