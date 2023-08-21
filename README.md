@@ -287,6 +287,8 @@ python __main__.py
 
 ## RECOMENDAMOS FUERTEMENTE CORRER SOLO UN ALGORITMO A LA VEZ, OSEA QUE EL JSON SOLO TENGA UN ATRIBUTO RUN EN TRUE. SINO EL PROGRAMA EJECUTARIA TODO LO QUE ESTE EN TRUE Y PUEDE LLEVAR A DEMORAS LARGAS
 
+Recomendacion para heuristicComparison y timesComparison:
+Dado que se puede definir la cantidad de iteraciones a correr, aconsejamos que si se selecciona el board1 o board9, poner una cantidad baja de iteraciones dado que puede llegar a tardar mucho tiempo. 
 
 ## Uso de clase Sokoban
 Para usar la clase Sokoban se puede usar su contructor. A este se le debe pasar el _path_ de un board.
