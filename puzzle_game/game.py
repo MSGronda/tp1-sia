@@ -19,8 +19,8 @@ class Game:
                       3: Coordinates(2, 0), 4: Coordinates(2, 1), 5: Coordinates(2, 2),
                       6: Coordinates(1, 2), 7: Coordinates(0, 2), 8: Coordinates(0, 1)}
 
-    def __init__(self, pathToBoard, depth):
-        self.depth = depth  # depth of this board node in the tree
+    def __init__(self, pathToBoard):
+        self.depth = 0  # depth of this board node in the tree
         if pathToBoard is not None:
             self.board = self.load_board(pathToBoard)
 
