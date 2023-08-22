@@ -10,8 +10,17 @@ Ejecutar en una linea de comnados (con pip instalado):
 pip install -r requirements.txt
 ```
 ## Ejecucion del 8-puzzle
-1) Dentro de la carpeta puzzle_game, en el archivo config.json, se encuentran las distintas configuraciones tablero - algoritmo - heuristica a ejecutar
-2) Dejando config.json como se encuentra, al ejecutar el archivo main.py, se autogenera un grafico que compara los pasos para llegar a la solucion que utilizo el algoritmo A* con las dos heuristicas disponibles
+1) Dentro de la carpeta puzzle_game.configs, se encuentran dos archivos JSON que funcionan como archivos de configuracion para algorithms-comparison.py y heuristics-comparison.py
+2) Ambos de estos archivos resuelven las distintas combinaciones de tablero - algoritmo - heuristica que se encuentran en los JSON correspondientes, y generan automaticamente un grafico
+3) Para ejecutar cualquiera de estos dos, solo hace falta escribir
+```
+python3 heuristic-comparison.py
+```
+o
+```
+python3 algorithms-comparison.py
+```
+
 
 ## Ejecucion del Sokoban
 2) Preparar el archivo configuration.json para la ejecucion:

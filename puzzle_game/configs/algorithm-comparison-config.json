@@ -1,0 +1,46 @@
+[
+  {
+    "boardToSolve": "./boards/difficult1",
+    "algorithmToUse": "a_star",
+    "heuristicToUse": "manhattan"
+  },
+  {
+    "boardToSolve": "./boards/difficult2",
+    "algorithmToUse": "a_star",
+    "heuristicToUse": "manhattan"
+  },
+  {
+    "boardToSolve": "./boards/difficult3",
+    "algorithmToUse": "a_star",
+    "heuristicToUse": "manhattan"
+  },{
+    "boardToSolve": "./boards/difficult1",
+    "algorithmToUse": "bfs",
+    "heuristicToUse": "none"
+  },
+  {
+    "boardToSolve": "./boards/difficult2",
+    "algorithmToUse": "bfs",
+    "heuristicToUse": "none"
+  },
+  {
+    "boardToSolve": "./boards/difficult3",
+    "algorithmToUse": "bfs",
+    "heuristicToUse": "none"
+  }
+  ,{
+    "boardToSolve": "./boards/difficult1",
+    "algorithmToUse": "dfs",
+    "heuristicToUse": "none"
+  },
+  {
+    "boardToSolve": "./boards/difficult2",
+    "algorithmToUse": "dfs",
+    "heuristicToUse": "none"
+  },
+  {
+    "boardToSolve": "./boards/difficult3",
+    "algorithmToUse": "dfs",
+    "heuristicToUse": "none"
+  }
+]

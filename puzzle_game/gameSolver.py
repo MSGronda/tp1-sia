@@ -13,6 +13,8 @@ def gameSolver(boardToSolve, algorithmToUse, heuristicToUse):
             heuristic = get_total_manhattan
         case "incorrect_numbers":
             heuristic = get_sum_incorrect
+        case "none":
+            heuristic = None
         case _:
             print("The heuristic is incorrect")
             exit()
@@ -31,17 +33,17 @@ def gameSolver(boardToSolve, algorithmToUse, heuristicToUse):
     game_first_instance = GameWithHeuristic(boardToSolve, heuristic)
     gamesToProcess = deque([game_first_instance])
     alreadyChecked = set()
-    steps = 0
+    expandedNodes = 0
     casesAvoid = 0
 
     while len(gamesToProcess) > 0:
         game = gamesToProcess.popleft()
-        steps += 1
+        expandedNodes += 1
 
         alreadyChecked.add(hash(game))
 
         if game.is_solved():
-            return steps, game.depth
+            return expandedNodes, game.depth
 
         possible_moves = game.get_possible_moves()
         for move in possible_moves:
@@ -52,5 +54,5 @@ def gameSolver(boardToSolve, algorithmToUse, heuristicToUse):
                 else:
                     casesAvoid += 1
 
-    print(f"Game couldn't be solved, cases avoided = {casesAvoid}, checked cases = {steps}")
+    print(f"Game couldn't be solved, cases avoided = {casesAvoid}, expanded nodes = {expandedNodes}")
     return None
