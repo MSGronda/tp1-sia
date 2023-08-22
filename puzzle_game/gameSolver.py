@@ -41,9 +41,7 @@ def gameSolver(boardToSolve, algorithmToUse, heuristicToUse):
         alreadyChecked.add(hash(game))
 
         if game.is_solved():
-            print(f"Game is solved! All it took was {steps} steps")
-            print(f"The depth of the answer is {game.depth}")
-            return
+            return steps, game.depth
 
         possible_moves = game.get_possible_moves()
         for move in possible_moves:
@@ -55,3 +53,4 @@ def gameSolver(boardToSolve, algorithmToUse, heuristicToUse):
                     casesAvoid += 1
 
     print(f"Game couldn't be solved, cases avoided = {casesAvoid}, checked cases = {steps}")
+    return None

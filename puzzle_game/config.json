@@ -13,5 +13,19 @@
     "boardToSolve": "./boards/difficult3",
     "algorithmToUse": "a_star",
     "heuristicToUse": "manhattan"
+  },{
+    "boardToSolve": "./boards/difficult1",
+    "algorithmToUse": "a_star",
+    "heuristicToUse": "incorrect_numbers"
+  },
+  {
+    "boardToSolve": "./boards/difficult2",
+    "algorithmToUse": "a_star",
+    "heuristicToUse": "incorrect_numbers"
+  },
+  {
+    "boardToSolve": "./boards/difficult3",
+    "algorithmToUse": "a_star",
+    "heuristicToUse": "incorrect_numbers"
   }
 ]

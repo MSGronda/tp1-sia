@@ -4,13 +4,16 @@
 1) Python 3
 2) Pip 3
 
-## Ejecucion:
-1) Ejecutar en una linea de comnados (con pip instalado):
+## Preparacion del entorno:
+Ejecutar en una linea de comnados (con pip instalado):
 ```
 pip install -r requirements.txt
 ```
+## Ejecucion del 8-puzzle
+1) Dentro de la carpeta puzzle_game, en el archivo config.json, se encuentran las distintas configuraciones tablero - algoritmo - heuristica a ejecutar
+2) Dejando config.json como se encuentra, al ejecutar el archivo main.py, se autogenera un grafico que compara los pasos para llegar a la solucion que utilizo el algoritmo A* con las dos heuristicas disponibles
 
-
+## Ejecucion del Sokoban
 2) Preparar el archivo configuration.json para la ejecucion:
 ```json
 {
@@ -285,7 +288,7 @@ python __main__.py
 ```
 
 
-## RECOMENDAMOS FUERTEMENTE CORRER SOLO UN ALGORITMO A LA VEZ, OSEA QUE EL JSON SOLO TENGA UN ATRIBUTO RUN EN TRUE. SINO EL PROGRAMA EJECUTARIA TODO LO QUE ESTE EN TRUE Y PUEDE LLEVAR A DEMORAS LARGAS
+**RECOMENDAMOS FUERTEMENTE CORRER SOLO UN ALGORITMO A LA VEZ, OSEA QUE EL JSON SOLO TENGA UN ATRIBUTO RUN EN TRUE. SINO EL PROGRAMA EJECUTARIA TODO LO QUE ESTE EN TRUE Y PUEDE LLEVAR A DEMORAS LARGAS**
 
 Recomendacion para heuristicComparison y timesComparison:
 Dado que se puede definir la cantidad de iteraciones a correr, aconsejamos que si se selecciona el board1 o board9, poner una cantidad baja de iteraciones dado que puede llegar a tardar mucho tiempo. 
